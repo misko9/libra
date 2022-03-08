@@ -334,7 +334,7 @@ impl From<&ValidatorVerifier> for ValidatorSet {
     }
 }
 
-/// Helper function to get random validator signers and a corresponding validator verifier for
+/*// Helper function to get random validator signers and a corresponding validator verifier for
 /// testing.  If custom_voting_power_quorum is not None, set a custom voting power quorum amount.
 /// With pseudo_random_account_address enabled, logs show 0 -> [0000], 1 -> [1000]
 #[cfg(any(test, feature = "fuzzing"))]
@@ -371,8 +371,8 @@ pub fn random_validator_verifier(
             None => ValidatorVerifier::new(account_address_to_validator_info),
         },
     )
-}
-
+}*/
+/*
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -404,8 +404,8 @@ mod tests {
             validator_verifier.check_voting_power(author_to_signature_map.keys()),
             Ok(())
         );
-    }
-
+    }*/
+/*
     #[test]
     fn test_validator() {
         let validator_signer = ValidatorSigner::random(TEST_SEED);
@@ -654,4 +654,4 @@ mod tests {
             Err(VerifyError::UnknownAuthor)
         );
     }
-}
+}*/

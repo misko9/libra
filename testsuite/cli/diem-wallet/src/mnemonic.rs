@@ -8,20 +8,20 @@
 
 use crate::error::WalletError;
 use anyhow::Result;
-#[cfg(test)]
-use diem_temppath::TempPath;
+//#[cfg(test)]
+//use diem_temppath::TempPath;
 use mirai_annotations::*;
-#[cfg(test)]
-use rand::rngs::OsRng;
-#[cfg(test)]
-use rand::RngCore;
+//#[cfg(test)]
+//use rand::rngs::OsRng;
+//#[cfg(test)]
+//use rand::RngCore;
 use sha2::{Digest, Sha256};
 
-use std::{
+/*use std::{
     fs::{self, File},
     io::Write,
     path::Path,
-};
+};*/
 
 /// Mnemonic seed for deterministic key derivation based on [BIP39](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki).
 /// The mnemonic must encode entropy in a multiple of 32 bits. With more entropy, security is
@@ -120,7 +120,7 @@ impl Mnemonic {
         Ok(Mnemonic(mnemonic))
     }
 
-    /// Write mnemonic to output_file_path.
+    /*// Write mnemonic to output_file_path.
     pub fn write(&self, output_file_path: &Path) -> Result<()> {
         if output_file_path.exists() && !output_file_path.is_file() {
             return Err(WalletError::DiemWalletGeneric(format!(
@@ -132,9 +132,9 @@ impl Mnemonic {
         let mut file = File::create(output_file_path)?;
         file.write_all(&self.to_string().as_bytes())?;
         Ok(())
-    }
+    }*/
 
-    /// Read mnemonic from input_file_path.
+    /*// Read mnemonic from input_file_path.
     pub fn read(input_file_path: &Path) -> Result<Self> {
         if input_file_path.exists() && input_file_path.is_file() {
             let mnemonic_string: String = fs::read_to_string(input_file_path)?;
@@ -144,7 +144,7 @@ impl Mnemonic {
             "Input file for mnemonic backup does not exist".to_string(),
         )
         .into())
-    }
+    }*/
 }
 
 /// BitReader reads data from a byte slice at the granularity of 11 bits.
@@ -455,7 +455,7 @@ const WORDS: [&str; 2048] = [
     "zoo",
 ];
 
-#[test]
+/*#[test]
 fn test_roundtrip_mnemonic() {
     let mut rng = OsRng;
     let mut buf = [0u8; 32];
@@ -466,7 +466,7 @@ fn test_roundtrip_mnemonic() {
     mnemonic.write(&path).unwrap();
     let other_mnemonic = Mnemonic::read(&path).unwrap();
     assert_eq!(mnemonic.to_string(), other_mnemonic.to_string());
-}
+}*/
 
 #[test]
 fn test_deterministic_mnemonic() {

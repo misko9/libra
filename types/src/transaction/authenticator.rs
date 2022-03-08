@@ -16,7 +16,7 @@ use diem_crypto::{
 use diem_crypto_derive::{CryptoHasher, DeserializeKey, SerializeKey};
 #[cfg(any(test, feature = "fuzzing"))]
 use proptest_derive::Arbitrary;
-use rand::{rngs::OsRng, Rng};
+//use rand::{rngs::OsRng, Rng};
 use serde::{Deserialize, Serialize};
 use std::{convert::TryFrom, fmt, str::FromStr};
 use thiserror::Error;
@@ -406,12 +406,12 @@ impl AuthenticationKey {
         self.0.to_vec()
     }
 
-    /// Create a random authentication key. For testing only
+    /*// Create a random authentication key. For testing only
     pub fn random() -> Self {
         let mut rng = OsRng;
         let buf: [u8; Self::LENGTH] = rng.gen();
         AuthenticationKey::new(buf)
-    }
+    }*/
 }
 
 impl ValidCryptoMaterial for AuthenticationKey {

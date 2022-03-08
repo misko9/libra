@@ -5,10 +5,10 @@ use crate::account_address::AccountAddress;
 use diem_crypto::{
     ed25519::{Ed25519PrivateKey, Ed25519PublicKey, Ed25519Signature},
     hash::CryptoHash,
-    test_utils::TEST_SEED,
+//    test_utils::TEST_SEED,
     PrivateKey, SigningKey, Uniform,
 };
-use rand::{rngs::StdRng, SeedableRng};
+//use rand::{rngs::StdRng, SeedableRng};
 use serde::ser::Serialize;
 use std::convert::TryFrom;
 
@@ -53,7 +53,7 @@ impl ValidatorSigner {
 }
 
 impl ValidatorSigner {
-    /// Generate a random set of public and private keys and author
+    /*// Generate a random set of public and private keys and author
     /// information.
     /// This takes an optional seed, which it initializes to
     /// `test_utils::TEST_SEED` if passed `None`
@@ -63,7 +63,7 @@ impl ValidatorSigner {
             AccountAddress::random(),
             Ed25519PrivateKey::generate(&mut rng),
         )
-    }
+    }*/
 
     /// For test only - makes signer with nicely looking account address that has specified integer
     /// as fist byte, and rest are zeroes

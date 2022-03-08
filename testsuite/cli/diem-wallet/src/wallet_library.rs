@@ -13,7 +13,7 @@
 
 use crate::{
     error::WalletError,
-    io_utils,
+//    io_utils,
     key_factory::{ChildNumber, KeyFactory, Seed},
     mnemonic::Mnemonic,
 };
@@ -27,8 +27,9 @@ use diem_types::{
         SignedTransaction,
     },
 };
-use rand::{rngs::OsRng, Rng};
-use std::{collections::HashMap, path::Path};
+//use rand::{rngs::OsRng, Rng};
+use std::collections::HashMap;
+//use std::path::Path;
 
 /// WalletLibrary contains all the information needed to recreate a particular wallet
 pub struct WalletLibrary {
@@ -39,7 +40,7 @@ pub struct WalletLibrary {
 }
 
 impl WalletLibrary {
-    /// Constructor that generates a Mnemonic from OS randomness and subsequently instantiates an
+    /*// Constructor that generates a Mnemonic from OS randomness and subsequently instantiates an
     /// empty WalletLibrary from that Mnemonic
     #[allow(clippy::new_without_default)]
     pub fn new() -> Self {
@@ -47,7 +48,7 @@ impl WalletLibrary {
         let data: [u8; 32] = rng.gen();
         let mnemonic = Mnemonic::mnemonic(&data).unwrap();
         Self::new_from_mnemonic(mnemonic)
-    }
+    }*/
 
     /// Constructor that instantiates a new WalletLibrary from Mnemonic
     pub fn new_from_mnemonic(mnemonic: Mnemonic) -> Self {
@@ -66,7 +67,7 @@ impl WalletLibrary {
         self.mnemonic.to_string()
     }
 
-    /// Function that writes the wallet Mnemonic to file
+    /*// Function that writes the wallet Mnemonic to file
     /// NOTE: This is not secure, and in general the Mnemonic would need to be decrypted before it
     /// can be written to file; otherwise the encrypted Mnemonic should be written to file
     pub fn write_recovery(&self, output_file_path: &Path) -> Result<()> {
@@ -77,7 +78,7 @@ impl WalletLibrary {
     /// Recover wallet from input_file_path
     pub fn recover(input_file_path: &Path) -> Result<WalletLibrary> {
         io_utils::recover(&input_file_path)
-    }
+    }*/
 
     /// Get the current ChildNumber in u64 format
     pub fn key_leaf(&self) -> u64 {

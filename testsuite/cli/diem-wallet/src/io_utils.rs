@@ -4,18 +4,18 @@
 //! A module to generate, store and load known users accounts.
 //! The concept of known users can be helpful for testing to provide reproducible results.
 
-use crate::{mnemonic::Mnemonic, wallet_library::WalletLibrary};
+/*use crate::{mnemonic::Mnemonic, wallet_library::WalletLibrary};
 use anyhow::Result;
 use std::{
     fs::File,
     io::{BufRead, BufReader, Write},
     path::Path,
-};
+};*/
 
 /// Delimiter used to ser/deserialize account data.
 pub const DELIMITER: &str = ";";
 
-/// Recover wallet from the path specified.
+/*// Recover wallet from the path specified.
 pub fn recover<P: AsRef<Path>>(path: &P) -> Result<WalletLibrary> {
     let input = File::open(path)?;
     let mut buffered = BufReader::new(input);
@@ -45,4 +45,4 @@ pub fn write_recovery<P: AsRef<Path>>(wallet: &WalletLibrary, path: &P) -> Resul
     )?;
 
     Ok(())
-}
+}*/
