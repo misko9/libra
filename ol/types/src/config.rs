@@ -1,30 +1,30 @@
 //! Configs for all 0L apps.
 
-use anyhow::{bail, Error};
-use diem_config::config::NodeConfig;
-use diem_global_constants::{CONFIG_FILE, NODE_HOME};
+//use anyhow::{bail, Error};
+//use diem_config::config::NodeConfig;
+//use diem_global_constants::{CONFIG_FILE, NODE_HOME};
 use diem_types::{
-    account_address::AccountAddress, transaction::authenticator::AuthenticationKey,
+//    account_address::AccountAddress, transaction::authenticator::AuthenticationKey,
     waypoint::Waypoint,
 };
-use dirs;
-use once_cell::sync::Lazy;
-use reqwest::{blocking::Client, Url};
+//use dirs;
+//use once_cell::sync::Lazy;
+//use reqwest::{blocking::Client, Url};
 use serde::{Deserialize, Serialize};
 use serde_json::{self, json};
-use std::{
-    fs::{self, File},
-    io::{Read, Write},
-    net::Ipv4Addr,
-    path::PathBuf,
-    str::FromStr,
-};
+//use std::{
+    //fs::{self, File},
+    //io::{Read, Write},
+    //net::Ipv4Addr,
+    //path::PathBuf,
+//    str::FromStr,
+//};
 
-use crate::dialogue::{add_tower, what_home, what_ip, what_statement, what_vfn_ip};
+//use crate::dialogue::{add_tower, what_home, what_ip, what_statement, what_vfn_ip};
 
 const BASE_WAYPOINT: &str = "0:683185844ef67e5c8eeaa158e635de2a4c574ce7bbb7f41f787d38db2d623ae2";
 
-/// Check if we are in prod mode
+/*// Check if we are in prod mode
 pub static IS_PROD: Lazy<bool> = Lazy::new(|| {
     match std::env::var("NODE_ENV") {
         Ok(val) => {
@@ -44,9 +44,9 @@ pub static IS_PROD: Lazy<bool> = Lazy::new(|| {
 pub static IS_TEST: Lazy<bool> = Lazy::new(|| {
     // assume default if NODE_ENV=prod and TEST=y.
     std::env::var("TEST").unwrap_or("n".to_string()) != "n".to_string()
-});
+});*/
 
-/// MinerApp Configuration
+/*// MinerApp Configuration
 #[derive(Clone, Debug, Deserialize, Serialize)]
 // #[serde(deny_unknown_fields)]
 pub struct AppCfg {
@@ -93,7 +93,7 @@ impl AppCfg {
             Ok(file) => {
                 let json: serde_json::Value =
                     serde_json::from_reader(file).expect("could not parse JSON in key_store.json");
-                match ajson::get(&json.to_string(), "*/waypoint.value") {
+                match ajson::get(&json.to_string(), "waypoint.value") { // was star/waypoint.value
                     Some(value) => value.to_string().parse(),
                     // If nothing is found in key_store.json fallback
                     // to base_waypoint in toml
@@ -294,9 +294,9 @@ impl AppCfg {
         );
         Ok(())
     }
-}
+}*/
 
-/// Default configuration settings.
+/*// Default configuration settings.
 ///
 /// Note: if your needs are as simple as below, you can
 /// use `#[derive(Default)]` on OlCliConfig instead.
@@ -309,9 +309,9 @@ impl Default for AppCfg {
             tx_configs: TxConfigs::default(),
         }
     }
-}
+}*/
 
-/// Information about the Chain to mined for
+/*// Information about the Chain to mined for
 #[derive(Clone, Debug, Deserialize, Serialize)]
 /// #[serde(deny_unknown_fields)]
 pub struct Workspace {
@@ -343,9 +343,9 @@ impl Default for Workspace {
             stdlib_bin_path: None,
         }
     }
-}
+}*/
 
-/// Information about the Chain to mined for
+/*// Information about the Chain to mined for
 #[derive(Clone, Debug, Deserialize, Serialize)]
 // #[serde(deny_unknown_fields)]
 pub struct ChainInfo {
@@ -369,8 +369,8 @@ impl Default for ChainInfo {
             base_waypoint: Waypoint::from_str(BASE_WAYPOINT).ok(),
         }
     }
-}
-/// Miner profile to commit this work chain to a particular identity
+}*/
+/*// Miner profile to commit this work chain to a particular identity
 #[derive(Clone, Debug, Deserialize, Serialize)]
 // #[serde(deny_unknown_fields)]
 pub struct Profile {
@@ -415,7 +415,7 @@ impl Default for Profile {
             tower_link: None,
         }
     }
-}
+}*/
 
 /// Transaction types
 pub enum TxType {
@@ -429,7 +429,7 @@ pub enum TxType {
     Cheap,
 }
 
-/// Transaction types used in 0L clients
+/*// Transaction types used in 0L clients
 #[derive(Clone, Debug, Deserialize, Serialize)]
 // #[serde(deny_unknown_fields)]
 pub struct TxConfigs {
@@ -465,7 +465,7 @@ impl TxConfigs {
         };
         cost.to_owned()
     }
-}
+}*/
 
 /// Transaction preferences for a given type of transaction
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -489,7 +489,7 @@ impl TxCost {
         }
     }
 }
-impl Default for TxConfigs {
+/*impl Default for TxConfigs {
     fn default() -> Self {
         Self {
             baseline_cost: default_baseline_cost(),
@@ -515,10 +515,10 @@ fn default_miner_txs_cost() -> Option<TxCost> {
 }
 fn default_cheap_txs_cost() -> Option<TxCost> {
     Some(TxCost::new(1_000))
-}
+}*/
 
 /// Get swarm configs from swarm files, swarm must be running
-pub fn get_swarm_rpc_url(mut swarm_path: PathBuf) -> (Url, Waypoint) {
+/*pub fn get_swarm_rpc_url(mut swarm_path: PathBuf) -> (Url, Waypoint) {
     swarm_path.push("0/node.yaml");
     let config = NodeConfig::load(&swarm_path)
         .unwrap_or_else(|_| panic!("Failed to load NodeConfig from file: {:?}", &swarm_path));
@@ -528,10 +528,10 @@ pub fn get_swarm_rpc_url(mut swarm_path: PathBuf) -> (Url, Waypoint) {
     let waypoint = config.base.waypoint.waypoint();
 
     (url, waypoint)
-}
+}*/
 
 /// Get swarm configs from swarm files, swarm must be running
-pub fn get_swarm_backup_service_url(mut swarm_path: PathBuf, swarm_id: u8) -> Result<Url, Error> {
+/*pub fn get_swarm_backup_service_url(mut swarm_path: PathBuf, swarm_id: u8) -> Result<Url, Error> {
     swarm_path.push(format!("{}/node.yaml", swarm_id));
     let config = NodeConfig::load(&swarm_path)
         .unwrap_or_else(|_| panic!("Failed to load NodeConfig from file: {:?}", &swarm_path));
@@ -540,14 +540,14 @@ pub fn get_swarm_backup_service_url(mut swarm_path: PathBuf, swarm_id: u8) -> Re
         Url::parse(format!("http://localhost:{}", config.storage.address.port()).as_str()).unwrap();
 
     Ok(url)
-}
+}*/
 
 #[derive(Serialize, Deserialize, Debug)]
 struct EpochJSON {
     epoch: u64,
     waypoint: Waypoint,
 }
-/// fetch initial waypoint information from a clean state.
+/*// fetch initial waypoint information from a clean state.
 pub fn bootstrap_waypoint_from_upstream(url: &mut Url) -> Result<(u64, Waypoint), Error> {
     url.set_port(Some(3030)).unwrap();
     let epoch_url = url.join("epoch.json").unwrap();
@@ -562,9 +562,9 @@ pub fn bootstrap_waypoint_from_upstream(url: &mut Url) -> Result<(u64, Waypoint)
         g_res.status(),
         g_res.text()
     );
-}
+}*/
 
-#[derive(Serialize, Deserialize, Debug)]
+/*#[derive(Serialize, Deserialize, Debug)]
 struct WaypointRpc {
     result: Option<serde_json::Value>,
 }
@@ -588,5 +588,5 @@ pub fn bootstrap_waypoint_from_rpc(url: Url) -> Result<Waypoint, Error> {
         _ => {}
     }
     bail!("could not get waypoint from json-rpc, url: {:?} ", url)
-}
+}*/
 

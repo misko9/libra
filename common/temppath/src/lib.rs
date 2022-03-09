@@ -1,7 +1,7 @@
 // Copyright (c) The Diem Core Contributors
 // SPDX-License-Identifier: Apache-2.0
 
-#![forbid(unsafe_code)]
+/*#![forbid(unsafe_code)]
 
 use rand::RngCore;
 use std::{
@@ -94,4 +94,4 @@ impl Default for TempPath {
     fn default() -> Self {
         Self::new()
     }
-}
+}*/

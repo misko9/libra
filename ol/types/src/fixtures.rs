@@ -1,4 +1,4 @@
-//! helper to get fixtures data from files in ol/fixtures folder.
+/*/! helper to get fixtures data from files in ol/fixtures folder.
 use std::{fs, path::{Path, PathBuf}};
 
 use crate::{block::VDFProof, config::{AppCfg, parse_toml}};
@@ -119,4 +119,4 @@ pub fn get_persona_block_one(persona: &str, env: &str) -> VDFProof {
 fn test_block() {
   let b = get_persona_block_zero("alice", "test");
   assert_eq!(b.difficulty, Some(100));
-}
+}*/

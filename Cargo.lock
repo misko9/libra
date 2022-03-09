@@ -2512,11 +2512,6 @@ dependencies = [
 [[package]]
 name = "diem-temppath"
 version = "0.1.0"
-dependencies = [
- "diem-workspace-hack",
- "hex 0.4.3",
- "rand 0.8.4",
-]
 
 [[package]]
 name = "diem-time-service"
@@ -2691,64 +2686,6 @@ dependencies = [
 [[package]]
 name = "diem-workspace-hack"
 version = "0.1.0"
-dependencies = [
- "Inflector",
- "anyhow",
- "backtrace",
- "bstr",
- "byteorder",
- "bytes 1.0.1",
- "cc",
- "chrono",
- "clap",
- "codespan-reporting",
- "crossbeam-channel",
- "crossbeam-deque",
- "crossbeam-utils",
- "either",
- "futures",
- "futures-channel",
- "futures-core",
- "futures-io",
- "futures-sink",
- "futures-util",
- "getrandom 0.2.2",
- "hashbrown",
- "hyper",
- "indexmap",
- "itertools 0.10.0",
- "itoa",
- "libc",
- "log",
- "memchr",
- "num-integer",
- "num-traits",
- "once_cell",
- "petgraph",
- "plotters",
- "proc-macro2 0.4.30",
- "prost",
- "quote 0.6.13",
- "rand 0.8.4",
- "rand_core 0.5.1",
- "regex",
- "regex-syntax",
- "reqwest",
- "rusty-fork",
- "serde",
- "serde_json",
- "standback",
- "subtle",
- "syn 0.15.44",
- "syn 1.0.72",
- "tiny-keccak",
- "tokio 1.11.0",
- "tokio-util",
- "toml",
- "tracing",
- "warp",
- "zeroize",
-]
 
 [[package]]
 name = "diem-writeset-generator"
@@ -5712,30 +5649,14 @@ dependencies = [
 name = "ol-types"
 version = "0.1.0"
 dependencies = [
- "ajson",
  "anyhow",
  "bcs",
- "byteorder",
- "dialoguer",
- "diem-config",
  "diem-crypto",
- "diem-global-constants",
  "diem-types",
- "dirs 2.0.2",
- "glob",
- "hex 0.4.3",
- "machine-ip",
  "move-core-types",
- "num-format",
  "ol-keys",
- "once_cell",
- "rand 0.8.4",
- "reqwest",
  "serde",
  "serde_json",
- "sha2",
- "toml",
- "url",
 ]
 
 [[package]]

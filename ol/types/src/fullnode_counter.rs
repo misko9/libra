@@ -1,5 +1,5 @@
 //! fullnode counter for system address
-
+/*
 use diem_types::{
     access_path::AccessPath,
     account_config::constants:: CORE_CODE_ADDRESS,
@@ -61,3 +61,4 @@ impl FullnodeCounterResource {
         bcs::from_bytes(bytes).map_err(Into::into)
     }
 }
+*/

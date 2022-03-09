@@ -1,5 +1,5 @@
 //! validator config view for web monitor
-
+/*
 use diem_types::{
     access_path::AccessPath,
     account_config::constants:: CORE_CODE_ADDRESS,
@@ -90,4 +90,4 @@ pub struct ValidatorConfigView {
     pub operator_account: Option<AccountAddress>,
     ///
     pub operator_has_balance: Option<bool>,
-}
+}*/

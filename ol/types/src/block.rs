@@ -1,5 +1,5 @@
 //! Proof block datastructure
-
+/*
 use hex;
 use serde::{Deserialize, Serialize};
 
@@ -50,3 +50,4 @@ impl VDFProof {
       self.security.unwrap_or(2048) as u64 // if the block doesn't have this info, assume it's legacy block.
     }
 }
+*/

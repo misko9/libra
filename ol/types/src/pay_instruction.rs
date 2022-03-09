@@ -1,16 +1,16 @@
 //! `autopay`
 
-use anyhow::Error;
-use diem_types::{
-    account_address::AccountAddress,
-    transaction::{Script, TransactionArgument},
-};
-use serde::{Deserialize, Serialize};
-use serde_json::Value;
-use std::{fs::{self, File}, io::Write, path::PathBuf, process::exit, u64};
+//use anyhow::Error;
+//use diem_types::{
+//    account_address::AccountAddress,
+//    transaction::{Script, TransactionArgument},
+//};
+//use serde::{Deserialize, Serialize};
+//use serde_json::Value;
+//use std::{fs::{self, File}, io::Write, path::PathBuf, process::exit, u64};
 
-#[cfg(test)]
-use crate::fixtures;
+//#[cfg(test)]
+//use crate::fixtures;
 
 // These match Autpay2.move
 /// send percent of balance at end of epoch payment type
@@ -22,7 +22,7 @@ const FIXED_RECURRING: u8 = 2;
 /// send a certain amount once at the next tick payment type
 const FIXED_ONCE: u8 = 3;
 
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
+/*#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 /// Types of instructions for autopay
 pub enum InstructionType {
@@ -237,9 +237,9 @@ impl PayInstruction {
         }
       }
     }
-}
+}*/
 
-/// save a batch file of instructions
+/*// save a batch file of instructions
 pub fn write_batch_file(file_path: PathBuf, vec_instr: Vec<PayInstruction>) -> Result<(), Error> {
   #[derive(Clone, Debug, Deserialize, Serialize)]
   struct Batch {
@@ -254,14 +254,14 @@ pub fn write_batch_file(file_path: PathBuf, vec_instr: Vec<PayInstruction>) -> R
 
     buffer.write(data.as_bytes())?;
     Ok(())
-}
+}*/
 
 
 // convert the decimals for Move.
 // for autopay purposes percentages have two decimal places precision.
 // No rounding is applied. The third decimal is trucated.
 // the result is a integer of 4 bits.
-fn scale_coin(coin_value: f64) -> Option<u64> {
+/*fn scale_coin(coin_value: f64) -> Option<u64> {
     // the UI for the autopay_batch, allows 2 decimal precision for pecentages: 12.34%
     // multiply by 100 to get the desired decimal precision
     let scale = coin_value * 1000000 as f64;
@@ -280,9 +280,9 @@ fn scale_percent(fract_percent: f64) -> Option<u64> {
         println!("percent needs to have max four digits, skipping");
         None
     }
-}
+}*/
 
-
+/*
 #[test]
 fn parse_file() {
     let path = fixtures::get_demo_autopay_json().1;
@@ -397,3 +397,4 @@ fn parse_fixed_recurr_end_epoch_type() {
     assert_eq!(seventh.value_move.unwrap(), 5000000u64);
 
 }
+*/

@@ -1,4 +1,4 @@
-//! seed peers for connecting to various networks.
+/*/! seed peers for connecting to various networks.
 use std::path::PathBuf;
 
 use anyhow::Error;
@@ -59,4 +59,4 @@ impl FullnodePlaylist {
     
     new_cfg.save_file()
   }
-}
+}*/

@@ -1,5 +1,5 @@
 //! genesis mining proof type
-
+/*
 use crate::{account::ValConfigs, config::IS_PROD, fixtures};
 use serde::{Deserialize, Serialize};
 
@@ -32,4 +32,4 @@ impl Default for GenesisMiningProof {
             profile: None,
         };
     }
-}
+}*/

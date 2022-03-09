@@ -1,5 +1,5 @@
 //! Formatters for libra account creation
-use crate::{block::VDFProof, config::IS_TEST};
+/*use crate::{block::VDFProof, config::IS_TEST};
 use dialoguer::Confirm;
 use diem_config::network_id::NetworkId;
 use diem_crypto::x25519::PublicKey;
@@ -11,9 +11,9 @@ use anyhow::{self, bail};
 use hex::{decode, encode};
 use ol_keys::scheme::KeyScheme;
 use serde::{de::Error, Deserialize, Deserializer, Serialize, Serializer};
-use std::{fs::File, io::Write, path::PathBuf, process::exit, net::Ipv4Addr};
+use std::{fs::File, io::Write, path::PathBuf, process::exit, net::Ipv4Addr};*/
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+/*#[derive(Serialize, Deserialize, Debug, Clone)]
 /// Configuration data necessary to initialize a validator.
 pub struct ValConfigs {
     /// Proof zero of the onboarded miner
@@ -231,9 +231,9 @@ impl ValConfigs {
             });
         Ok(())
     }
-}
+}*/
 
-impl UserConfigs {
+/*impl UserConfigs {
     /// New user configs
     pub fn new(block: VDFProof) -> UserConfigs {
         UserConfigs {
@@ -322,4 +322,4 @@ fn val_config_ip_address() {
     assert_eq!(
         dec_addrs.to_string(),
         "/ip4/161.35.13.169/tcp/6180/ln-noise-ik/151bcbc2adf48aefee3492a3c802ce35e347860f28dbcffe74068419f3b11812/ln-handshake/0".to_string());
-}
+}*/

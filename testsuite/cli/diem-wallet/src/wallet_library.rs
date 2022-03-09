@@ -27,7 +27,7 @@ use diem_types::{
         SignedTransaction,
     },
 };
-//use rand::{rngs::OsRng, Rng};
+use rand::{rngs::OsRng, Rng};
 use std::collections::HashMap;
 //use std::path::Path;
 
@@ -40,7 +40,7 @@ pub struct WalletLibrary {
 }
 
 impl WalletLibrary {
-    /*// Constructor that generates a Mnemonic from OS randomness and subsequently instantiates an
+    // Constructor that generates a Mnemonic from OS randomness and subsequently instantiates an
     /// empty WalletLibrary from that Mnemonic
     #[allow(clippy::new_without_default)]
     pub fn new() -> Self {
@@ -48,7 +48,7 @@ impl WalletLibrary {
         let data: [u8; 32] = rng.gen();
         let mnemonic = Mnemonic::mnemonic(&data).unwrap();
         Self::new_from_mnemonic(mnemonic)
-    }*/
+    }
 
     /// Constructor that instantiates a new WalletLibrary from Mnemonic
     pub fn new_from_mnemonic(mnemonic: Mnemonic) -> Self {

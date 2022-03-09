@@ -1,5 +1,5 @@
 //! get home path or set it
-use anyhow::{bail, Error};
+/*use anyhow::{bail, Error};
 use dialoguer::{Confirm, Input};
 use diem_crypto::HashValue;
 use diem_global_constants::NODE_HOME;
@@ -10,9 +10,9 @@ use std::{fs, net::Ipv4Addr, path::PathBuf};
 use crate::{
     block::VDFProof,
     config::{AppCfg, IS_TEST},
-};
+};*/
 
-/// interact with user to get the home path for files
+/*// interact with user to get the home path for files
 pub fn what_home(swarm_path: Option<PathBuf>, swarm_persona: Option<String>) -> PathBuf {
     // For dev and CI setup
     if let Some(path) = swarm_path {
@@ -215,3 +215,4 @@ fn find_last_legacy_block(blocks_dir: &PathBuf) -> Result<VDFProof, Error> {
 fn hash_last_proof(proof: &Vec<u8>) -> Vec<u8> {
     HashValue::sha3_256_of(proof).to_vec()
 }
+*/

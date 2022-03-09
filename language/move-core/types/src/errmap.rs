@@ -6,9 +6,9 @@ use anyhow::{bail, Result};
 use serde::{Deserialize, Serialize};
 use std::{
     collections::BTreeMap,
-    fs::File,
-    io::{Read, Write},
-    path::Path,
+    //fs::File,
+    //io::{Read, Write},
+    //path::Path,
 };
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -75,7 +75,7 @@ impl ErrorMapping {
         Ok(())
     }
 
-    pub fn from_file<P: AsRef<Path>>(path: P) -> Self {
+    /*pub fn from_file<P: AsRef<Path>>(path: P) -> Self {
         let mut bytes = Vec::new();
         File::open(path).unwrap().read_to_end(&mut bytes).unwrap();
         bcs::from_bytes(&bytes).unwrap()
@@ -85,7 +85,7 @@ impl ErrorMapping {
         let bytes = bcs::to_bytes(self).unwrap();
         let mut file = File::create(path).unwrap();
         file.write_all(&bytes).unwrap();
-    }
+    }*/
 
     pub fn get_explanation(&self, module: &ModuleId, output_code: u64) -> Option<ErrorContext> {
         let category = output_code & 0xFFu64;
