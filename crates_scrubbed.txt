@@ -9,14 +9,13 @@ diem-crypto v0.0.2 (/Users/steve/code/github/misko9/libra/crypto/crypto)
 move-core-types v0.0.2 (/Users/steve/code/github/misko9/libra/language/move-core/types)
 ol-keys v0.1.0 (/Users/steve/code/github/misko9/libra/ol/keys)
 ol-types libra/ol/types
-
+diem-json-rpc-types libra/json-rpc/types
+diem-transaction-builder = { path = "../../sdk/transaction-builder", version = "0.0.2" }
 
 In progress
-diem-json-rpc-types libra/json-rpc/types
 
 
 Need to do
-diem-transaction-builder = { path = "../../sdk/transaction-builder", version = "0.0.2" }
 
 ???
 use proptest::prelude::*;
