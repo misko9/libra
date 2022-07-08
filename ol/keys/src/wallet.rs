@@ -2,7 +2,7 @@
 use diem_types::{account_address::AccountAddress, transaction::authenticator::AuthenticationKey};
 use diem_wallet::{Mnemonic, WalletLibrary};
 use once_cell::sync::Lazy;
-use std::{env, process::exit};
+//use std::{env, process::exit};
 
 /// Genereates keys from WalletLibrary, updates a MinerConfig
 pub fn keygen() -> (AuthenticationKey, AccountAddress, WalletLibrary, String) {
@@ -62,40 +62,40 @@ pub fn get_account_from_wallet(
     get_account_from_mnem(wallet.mnemonic())
 }
 
-/// Prompts user to type mnemonic securely.
-pub fn get_account_from_prompt() -> (AuthenticationKey, AccountAddress, WalletLibrary) {
-    println!("Enter your 0L mnemonic:");
+// / Prompts user to type mnemonic securely.
+// pub fn get_account_from_prompt() -> (AuthenticationKey, AccountAddress, WalletLibrary) {
+//     println!("Enter your 0L mnemonic:");
 
-    let test_env_mnem = env::var("MNEM");
-    // if we are in debugging or CI mode
-    let mnem = match *IS_TEST && test_env_mnem.is_ok() {
-        true => {
-            println!("Debugging mode, using mnemonic from env variable, $MNEM");
-            test_env_mnem.unwrap().trim().to_string()
-        }
-        false => match rpassword::read_password_from_tty(Some("\u{1F511} ")) {
-            Ok(read) => read,
-            Err(e) => {
-                println!(
-                    "ERROR: could not read mnemonic from prompt, message: {}",
-                    &e.to_string()
-                );
-                exit(1);
-            }
-        },
-    };
-
-    match get_account_from_mnem(mnem) {
-        Ok(a) => a,
-        Err(e) => {
-            println!(
-                "ERROR: could not get account from mnemonic, message: {}",
-                &e.to_string()
-            );
-            exit(1);
-        }
-    }
-}
+//     let test_env_mnem = env::var("MNEM");
+//     // if we are in debugging or CI mode
+//     let mnem = match *IS_TEST && test_env_mnem.is_ok() {
+//         true => {
+//             println!("Debugging mode, using mnemonic from env variable, $MNEM");
+//             test_env_mnem.unwrap().trim().to_string()
+//         }
+//         false => match rpassword::read_password_from_tty(Some("\u{1F511} ")) {
+//             Ok(read) => read,
+//             Err(e) => {
+//                 println!(
+//                     "ERROR: could not read mnemonic from prompt, message: {}",
+//                     &e.to_string()
+//                 );
+//                 exit(1);
+//             }
+//         },
+//     };
+//
+//     match get_account_from_mnem(mnem) {
+//         Ok(a) => a,
+//         Err(e) => {
+//             println!(
+//                 "ERROR: could not get account from mnemonic, message: {}",
+//                 &e.to_string()
+//             );
+//             exit(1);
+//         }
+//     }
+// }
 
 #[test]
 fn wallet() {
@@ -123,8 +123,8 @@ fn wallet() {
 }
 
 // TODO: this is duplicated with ol/types/config because of a dependency cycle. Move to Global constants?
-/// check this is CI environment
-pub static IS_TEST: Lazy<bool> = Lazy::new(|| {
-    // assume default if NODE_ENV=prod and TEST=y.
-    std::env::var("TEST").unwrap_or("n".to_string()) != "n".to_string()
-});
+// / check this is CI environment
+// pub static IS_TEST: Lazy<bool> = Lazy::new(|| {
+//     // assume default if NODE_ENV=prod and TEST=y.
+//     std::env::var("TEST").unwrap_or("n".to_string()) != "n".to_string()
+// });

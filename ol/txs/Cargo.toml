@@ -42,7 +42,7 @@ ol = {path = "../cli"}
 ol-keys = { path = "../keys/", version = "0.1.0" }
 ol-types = {path = "../../ol/types"}
 resource-viewer = { path = "../../language/tools/resource-viewer", version = "0.1.0" }
-reqwest = { version = "0.11.2", features = ["blocking", "json"], default_features = false }
+#reqwest = { version = "0.11.2", features = ["blocking", "json"], default_features = false }
 storage-interface= {path = "../../storage/storage-interface"}
 vdf = { path = "../../ol/verifiable_delay/vdf", version = "^0.1.0" }
 vm-genesis={path="../../language/tools/vm-genesis"}

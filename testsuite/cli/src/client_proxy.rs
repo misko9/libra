@@ -44,7 +44,7 @@ use diem_types::{
 };
 use diem_wallet::{io_utils, Mnemonic, WalletLibrary};
 use num_traits::cast::{FromPrimitive, ToPrimitive};
-use reqwest::Url;
+//use reqwest::Url;
 use resource_viewer::{AnnotatedAccountStateBlob, MoveValueAnnotator, NullStateView};
 use rust_decimal::Decimal;
 use std::{

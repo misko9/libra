@@ -1,7 +1,7 @@
 //! Configs for all 0L apps.
 
 use anyhow::{bail, Error};
-use diem_config::config::NodeConfig;
+//use diem_config::config::NodeConfig;
 use diem_global_constants::{CONFIG_FILE, NODE_HOME};
 use diem_types::{
     account_address::AccountAddress, chain_id::NamedChain,
@@ -9,18 +9,18 @@ use diem_types::{
 };
 use dirs;
 use once_cell::sync::Lazy;
-use reqwest::{blocking::Client, Url};
+//use reqwest::{blocking::Client, Url};
 use serde::{Deserialize, Serialize};
 use serde_json::{self, json};
 use std::{
-    fs::{self, File},
-    io::{Read, Write},
+//    fs::{self, File},
+//    io::{Read, Write},
     net::Ipv4Addr,
-    path::PathBuf,
+//    path::PathBuf,
     str::FromStr,
 };
 
-use crate::dialogue::{what_home, what_ip, what_statement, what_vfn_ip};
+//use crate::dialogue::{what_home, what_ip, what_statement, what_vfn_ip};
 
 const BASE_WAYPOINT: &str = "0:683185844ef67e5c8eeaa158e635de2a4c574ce7bbb7f41f787d38db2d623ae2";
 
@@ -39,314 +39,313 @@ pub static IS_PROD: Lazy<bool> = Lazy::new(|| {
     }
 });
 
-// TODO: this is duplicated in ol/keys/wallet due to dependency cycle. Move to Global constants?
-/// check this is CI environment
-pub static IS_TEST: Lazy<bool> = Lazy::new(|| {
-    // assume default if NODE_ENV=prod and TEST=y.
-    std::env::var("TEST").unwrap_or("n".to_string()) != "n".to_string()
-});
+// // TODO: this is duplicated in ol/keys/wallet due to dependency cycle. Move to Global constants?
+// /// check this is CI environment
+// pub static IS_TEST: Lazy<bool> = Lazy::new(|| {
+//     // assume default if NODE_ENV=prod and TEST=y.
+//     std::env::var("TEST").unwrap_or("n".to_string()) != "n".to_string()
+// });
 
-/// MinerApp Configuration
-#[derive(Clone, Debug, Deserialize, Serialize)]
-// #[serde(deny_unknown_fields)]
-pub struct AppCfg {
-    /// Workspace config
-    pub workspace: Workspace,
-    /// User Profile
-    pub profile: Profile,
-    /// Chain Info for all users
-    pub chain_info: ChainInfo,
-    /// Transaction configurations
-    pub tx_configs: TxConfigs,
-}
+// /// MinerApp Configuration
+// #[derive(Clone, Debug, Deserialize, Serialize)]
+// // #[serde(deny_unknown_fields)]
+// pub struct AppCfg {
+//     /// Workspace config
+//     pub workspace: Workspace,
+//     /// User Profile
+//     pub profile: Profile,
+//     /// Chain Info for all users
+//     pub chain_info: ChainInfo,
+//     /// Transaction configurations
+//     pub tx_configs: TxConfigs,
+// }
 
-/// Get a AppCfg object from toml file
-pub fn parse_toml(path: Option<PathBuf>) -> Result<AppCfg, Error> {
-    let cfg_path = path.unwrap_or(dirs::home_dir().unwrap().join(".0L").join("0L.toml"));
+// / Get a AppCfg object from toml file
+// pub fn parse_toml(path: Option<PathBuf>) -> Result<AppCfg, Error> {
+//     let cfg_path = path.unwrap_or(dirs::home_dir().unwrap().join(".0L").join("0L.toml"));
 
-    let mut toml_buf = "".to_string();
-    let mut file = File::open(&cfg_path)?;
-    file.read_to_string(&mut toml_buf)?;
+//     let mut toml_buf = "".to_string();
+//     let mut file = File::open(&cfg_path)?;
+//     file.read_to_string(&mut toml_buf)?;
 
-    let cfg: AppCfg = toml::from_str(&toml_buf)?;
-    Ok(cfg)
-}
 
-/// Get a AppCfg object from toml file
-pub fn fix_missing_fields(path: PathBuf) -> Result<(), Error> {
-    let cfg: AppCfg = parse_toml(Some(path))?;
-    cfg.save_file()?;
-    Ok(())
-}
+//     let cfg: AppCfg = toml::from_str(&toml_buf)?;
+//     Ok(cfg)
+// }
 
-impl AppCfg {
-    /// Gets the dynamic waypoint from diem node's key_store.json
-    pub fn get_waypoint(&self, swarm_path_opt: Option<PathBuf>) -> Result<Waypoint, Error> {
-        let err_msg = Error::msg("Could not get waypoint from cli, key_store.json, nor 0L.toml.");
+// / Get a AppCfg object from toml file
+// pub fn fix_missing_fields(path: PathBuf) -> Result<(), Error> {
+//     let cfg: AppCfg = parse_toml(Some(path))?;
+//     cfg.save_file()?;
+//     Ok(())
+// }
 
-        if let Some(path) = swarm_path_opt {
-            return Ok(get_swarm_rpc_url(path).1);
-        };
+// impl AppCfg {
+    // / Gets the dynamic waypoint from diem node's key_store.json
+    // pub fn get_waypoint(&self, swarm_path_opt: Option<PathBuf>) -> Result<Waypoint, Error> {
+    //     let err_msg = Error::msg("Could not get waypoint from cli, key_store.json, nor 0L.toml.");
 
-        match fs::File::open(self.get_key_store_path()) {
-            Ok(file) => {
-                let json: serde_json::Value =
-                    serde_json::from_reader(file).expect("could not parse JSON in key_store.json");
-                match ajson::get(&json.to_string(), "*/waypoint.value") {
-                    Some(value) => value.to_string().parse(),
-                    // If nothing is found in key_store.json fallback
-                    // to base_waypoint in toml
-                    _ => match self.chain_info.base_waypoint {
-                        Some(w) => Ok(w),
-                        None => Err(err_msg),
-                    },
-                }
-            }
-            Err(_) => {
-                // println!("Waypoint: fallback to base_waypoint in 0L.toml");
-                match self.chain_info.base_waypoint {
-                    Some(w) => Ok(w),
-                    None => Err(err_msg),
-                }
-            }
-        }
-    }
+    //     if let Some(path) = swarm_path_opt {
+    //         return Ok(get_swarm_rpc_url(path).1);
+    //     };
 
-    /// format the standard namespace for 0L OPERATOR
-    pub fn format_oper_namespace(&self) -> String {
-        format!("{}-oper", self.profile.account.to_hex())
-    }
+    //     match fs::File::open(self.get_key_store_path()) {
+    //         Ok(file) => {
+    //             let json: serde_json::Value =
+    //                 serde_json::from_reader(file).expect("could not parse JSON in key_store.json");
+    //             match ajson::get(&json.to_string(), "*/waypoint.value") {
+    //                 Some(value) => value.to_string().parse(),
+    //                 // If nothing is found in key_store.json fallback
+    //                 // to base_waypoint in toml
+    //                 _ => match self.chain_info.base_waypoint {
+    //                     Some(w) => Ok(w),
+    //                     None => Err(err_msg),
+    //                 },
+    //             }
+    //         }
+    //         Err(_) => {
+    //             // println!("Waypoint: fallback to base_waypoint in 0L.toml");
+    //             match self.chain_info.base_waypoint {
+    //                 Some(w) => Ok(w),
+    //                 None => Err(err_msg),
+    //             }
+    //         }
+    //     }
+    // }
 
-    /// format the standard namespace for 0L OWNER
-    pub fn format_owner_namespace(&self) -> String {
-        self.profile.account.to_hex()
-    }
+    // /// format the standard namespace for 0L OPERATOR
+    // pub fn format_oper_namespace(&self) -> String {
+    //   format!("{}-oper", self.profile.account.to_hex())
+    // }
 
-    /// Get where the block/proofs are stored.
-    pub fn get_block_dir(&self) -> PathBuf {
-        let mut home = self.workspace.node_home.clone();
-        home.push(&self.workspace.block_dir);
-        home
-    }
+    // /// format the standard namespace for 0L OWNER
+    // pub fn format_owner_namespace(&self) -> String {
+    //   self.profile.account.to_hex()
+    // }
+    
 
-    /// Get where node key_store.json stored.
-    pub fn get_key_store_path(&self) -> PathBuf {
-        let mut home = self.workspace.node_home.clone();
-        home.push("key_store.json");
-        home
-    }
+    // / Get where the block/proofs are stored.
+    // pub fn get_block_dir(&self) -> PathBuf {
+    //     let mut home = self.workspace.node_home.clone();
+    //     home.push(&self.workspace.block_dir);
+    //     home
+    // }
 
-    /// Get where node key_store.json stored.
-    pub fn init_app_configs(
-        authkey: AuthenticationKey,
-        account: AccountAddress,
-        upstream_peer: &Option<Url>,
-        config_path: &Option<PathBuf>,
-        base_epoch: &Option<u64>,
-        base_waypoint: &Option<Waypoint>,
-        source_path: &Option<PathBuf>,
-        statement: Option<String>,
-        ip: Option<Ipv4Addr>,
-        network_id: &Option<NamedChain>,
-    ) -> Result<AppCfg, Error> {
-        // TODO: Check if configs exist and warn on overwrite.
-        let mut default_config = AppCfg::default();
-        default_config.profile.auth_key = authkey;
-        default_config.profile.account = account;
+    // / Get where node key_store.json stored.
+    // pub fn get_key_store_path(&self) -> PathBuf {
+    //     let mut home = self.workspace.node_home.clone();
+    //     home.push("key_store.json");
+    //     home
+    // }
 
-        // Get statement which goes into genesis block
-        default_config.profile.statement = match statement {
-            Some(s) => s,
-            None => what_statement(),
-        };
+    // / Get where node key_store.json stored.
+    // pub fn init_app_configs(
+    //     authkey: AuthenticationKey,
+    //     account: AccountAddress,
+    //     upstream_peer: &Option<Url>,
+    //     config_path: &Option<PathBuf>,
+    //     base_epoch: &Option<u64>,
+    //     base_waypoint: &Option<Waypoint>,
+    //     source_path: &Option<PathBuf>,
+    //     statement: Option<String>,
+    //     ip: Option<Ipv4Addr>,
+    // ) -> Result<AppCfg, Error> {
+    //     // TODO: Check if configs exist and warn on overwrite.
+    //     let mut default_config = AppCfg::default();
+    //     default_config.profile.auth_key = authkey;
+    //     default_config.profile.account = account;
 
-        default_config.profile.ip = match ip {
-            Some(i) => i,
-            None => what_ip().unwrap(),
-        };
+    //     // Get statement which goes into genesis block
+    //     default_config.profile.statement = match statement {
+    //         Some(s) => s,
+    //         None => what_statement(),
+    //     };
 
-        default_config.profile.vfn_ip = match ip {
-            Some(i) => Some(i),
-            None => what_vfn_ip().ok(),
-        };
+    //     default_config.profile.ip = match ip {
+    //         Some(i) => i,
+    //         None => what_ip().unwrap(),
+    //     };
 
-        default_config.workspace.node_home =
-            config_path.clone().unwrap_or_else(|| what_home(None, None));
+    //     default_config.profile.vfn_ip = match ip {
+    //         Some(i) => Some(i),
+    //         None => what_vfn_ip().ok(),
+    //     };
 
-        if let Some(u) = upstream_peer {
-            default_config.profile.upstream_nodes = vec![u.to_owned()]
-        };
-        // Add link to previous tower
-        // if !*IS_TEST {
-        //     default_config.profile.tower_link = add_tower(&default_config);
-        // }
+    //     default_config.workspace.node_home =
+    //         config_path.clone().unwrap_or_else(|| what_home(None, None));
 
-        if let Some(id) = network_id {
-            default_config.chain_info.chain_id = id.to_owned();
-        };
+    //     if let Some(u) = upstream_peer {
+    //       default_config.profile.upstream_nodes = vec![u.to_owned()]
+    //     };
+    //     // Add link to previous tower
+    //     // if !*IS_TEST {
+    //     //     default_config.profile.tower_link = add_tower(&default_config);
+    //     // }
 
-        if source_path.is_some() {
-            // let source_path = what_source();
-            default_config.workspace.source_path = source_path.clone();
-            default_config.workspace.stdlib_bin_path = Some(
-                source_path
-                    .as_ref()
-                    .unwrap()
-                    .join("language/diem-framework/staged/stdlib.mv"),
-            );
-        }
+    //     if source_path.is_some() {
+    //         // let source_path = what_source();
+    //         default_config.workspace.source_path = source_path.clone();
+    //         default_config.workspace.stdlib_bin_path = Some(
+    //             source_path
+    //                 .as_ref()
+    //                 .unwrap()
+    //                 .join("language/diem-framework/staged/stdlib.mv"),
+    //         );
+    //     }
 
-        // override from args
-        if base_epoch.is_some() && base_waypoint.is_some() {
-            default_config.chain_info.base_epoch = *base_epoch;
-            default_config.chain_info.base_waypoint = *base_waypoint;
-        } else {
-            default_config.chain_info.base_epoch = None;
-            default_config.chain_info.base_waypoint = None;
-            println!("WARN: No --epoch or --waypoint or upstream --url passed. This should only be done at genesis. If that's not correct either pass --epoch and --waypoint as CLI args, or provide a URL to fetch this data from --upstream-peer or --template-url");
-        }
+    //     // override from args
+    //     if base_epoch.is_some() && base_waypoint.is_some() {
+    //         default_config.chain_info.base_epoch = *base_epoch;
+    //         default_config.chain_info.base_waypoint = *base_waypoint;
+    //     } else {
 
-        // skip questionnaire if CI
-        if *IS_TEST {
-            default_config.save_file()?;
+    //       default_config.chain_info.base_epoch = None;
+    //       default_config.chain_info.base_waypoint = None;
+    //       println!("WARN: No --epoch or --waypoint or upstream --url passed. This should only be done at genesis. If that's not correct either pass --epoch and --waypoint as CLI args, or provide a URL to fetch this data from --upstream-peer or --template-url");
 
-            return Ok(default_config);
-        }
-        fs::create_dir_all(&default_config.workspace.node_home).unwrap();
-        default_config.save_file()?;
+    //     }
 
-        Ok(default_config)
-    }
+    //     // skip questionnaire if CI
+    //     if *IS_TEST {
+    //         default_config.save_file()?;
 
-    /// Save swarm default configs to swarm path
-    /// swarm_path points to the swarm_temp directory
-    /// node_home to the directory of the current swarm persona
-    pub fn init_app_configs_swarm(
-        swarm_path: PathBuf,
-        node_home: PathBuf,
-        source_path: Option<PathBuf>,
-    ) -> Result<AppCfg, Error> {
-        // println!("init_swarm_config: {:?}", swarm_path); already logged in commands.rs
-        let host_config = AppCfg::make_swarm_configs(swarm_path, node_home, source_path);
-        host_config.save_file()?;
-        Ok(host_config)
-    }
+    //         return Ok(default_config);
+    //     }
+    //     fs::create_dir_all(&default_config.workspace.node_home).unwrap();
+    //     default_config.save_file()?;
 
-    /// get configs from swarm
-    /// swarm_path points to the swarm_temp directory
-    /// node_home to the directory of the current swarm persona
-    pub fn make_swarm_configs(
-        swarm_path: PathBuf,
-        node_home: PathBuf,
-        source_path: Option<PathBuf>,
-    ) -> AppCfg {
-        let config_path = swarm_path.join(&node_home).join("node.yaml");
-        let config = NodeConfig::load(&config_path)
-            .unwrap_or_else(|_| panic!("Failed to load NodeConfig from file: {:?}", &config_path));
+    //     Ok(default_config)
+    // }
 
-        // upstream configs
-        let upstream_config_path = swarm_path.join(&node_home).join("node.yaml");
-        let upstream_config = NodeConfig::load(&upstream_config_path).unwrap_or_else(|_| {
-            panic!(
-                "Failed to load NodeConfig from file: {:?}",
-                &upstream_config_path
-            )
-        });
-        let upstream_url = Url::parse(
-            format!(
-                "http://localhost:{}",
-                upstream_config.json_rpc.address.port()
-            )
-            .as_str(),
-        )
-        .unwrap();
-        // let waypoint = config.base.waypoint.waypoint();
+    // / Save swarm default configs to swarm path
+    // / swarm_path points to the swarm_temp directory
+    // / node_home to the directory of the current swarm persona
+    // pub fn init_app_configs_swarm(
+    //     swarm_path: PathBuf,
+    //     node_home: PathBuf,
+    //     source_path: Option<PathBuf>,
+    // ) -> Result<AppCfg, Error> {
+    //     // println!("init_swarm_config: {:?}", swarm_path); already logged in commands.rs
+    //     let host_config = AppCfg::make_swarm_configs(swarm_path, node_home, source_path);
+    //     host_config.save_file()?;
+    //     Ok(host_config)
+    // }
 
-        let mut cfg = AppCfg {
-            workspace: Workspace::default(),
-            profile: Profile::default(),
-            chain_info: ChainInfo::default(),
-            tx_configs: TxConfigs::default(),
-        };
+    // / get configs from swarm
+    // / swarm_path points to the swarm_temp directory
+    // / node_home to the directory of the current swarm persona
+    // pub fn make_swarm_configs(
+    //     swarm_path: PathBuf,
+    //     node_home: PathBuf,
+    //     source_path: Option<PathBuf>,
+    // ) -> AppCfg {
+    //     let config_path = swarm_path.join(&node_home).join("node.yaml");
+    //     let config = NodeConfig::load(&config_path)
+    //         .unwrap_or_else(|_| panic!("Failed to load NodeConfig from file: {:?}", &config_path));
 
-        let db_path = node_home.join("db");
+    //     // upstream configs
+    //     let upstream_config_path = swarm_path.join(&node_home).join("node.yaml");
+    //     let upstream_config = NodeConfig::load(&upstream_config_path).unwrap_or_else(|_| {
+    //         panic!(
+    //             "Failed to load NodeConfig from file: {:?}",
+    //             &upstream_config_path
+    //         )
+    //     });
+    //     let upstream_url = Url::parse(
+    //         format!(
+    //             "http://localhost:{}",
+    //             upstream_config.json_rpc.address.port()
+    //         )
+    //         .as_str(),
+    //     )
+    //     .unwrap();
+    //     // let waypoint = config.base.waypoint.waypoint();
 
-        cfg.workspace.node_home = node_home;
-        cfg.workspace.db_path = db_path;
-        cfg.workspace.source_path = source_path;
-        cfg.chain_info.base_waypoint = Some(config.base.waypoint.waypoint());
-        cfg.profile.account = "4C613C2F4B1E67CA8D98A542EE3F59F5".parse().unwrap(); // alice
-        cfg.profile.upstream_nodes = vec![upstream_url];
+    //     let mut cfg = AppCfg {
+    //         workspace: Workspace::default(),
+    //         profile: Profile::default(),
+    //         chain_info: ChainInfo::default(),
+    //         tx_configs: TxConfigs::default(),
+    //     };
 
-        cfg
-    }
+    //     let db_path = node_home.join("db");
 
-    /// save the config file to 0L.toml to the workspace home path
-    pub fn save_file(&self) -> Result<(), Error> {
-        let toml = toml::to_string(&self)?;
-        let home_path = &self.workspace.node_home.clone();
-        // create home path if doesn't exist, usually only in dev/ci environments.
-        fs::create_dir_all(&home_path)?;
-        let toml_path = home_path.join(CONFIG_FILE);
-        let mut file = fs::File::create(&toml_path)?;
-        file.write(&toml.as_bytes())?;
+    //     cfg.workspace.node_home = node_home;
+    //     cfg.workspace.db_path = db_path;
+    //     cfg.workspace.source_path = source_path;
+    //     cfg.chain_info.base_waypoint = Some(config.base.waypoint.waypoint());
+    //     cfg.profile.account = "4C613C2F4B1E67CA8D98A542EE3F59F5".parse().unwrap(); // alice
+    //     cfg.profile.upstream_nodes = vec![upstream_url];
 
-        println!(
-            "\nhost configs initialized, file saved to: {:?}",
-            &toml_path
-        );
-        Ok(())
-    }
-}
+    //     cfg
+    // }
+
+    // / save the config file to 0L.toml to the workspace home path
+    // pub fn save_file(&self) -> Result<(), Error>{
+    //     let toml = toml::to_string(&self)?;
+    //     let home_path = &self.workspace.node_home.clone();
+    //     // create home path if doesn't exist, usually only in dev/ci environments.
+    //     fs::create_dir_all(&home_path)?;
+    //     let toml_path = home_path.join(CONFIG_FILE);
+    //     let mut file = fs::File::create(&toml_path)?;
+    //     file.write(&toml.as_bytes())?;
+
+    //     println!(
+    //         "\nhost configs initialized, file saved to: {:?}",
+    //         &toml_path
+    //     );
+    //     Ok(())
+    // }
+// }
 
 /// Default configuration settings.
 ///
 /// Note: if your needs are as simple as below, you can
 /// use `#[derive(Default)]` on OlCliConfig instead.
-impl Default for AppCfg {
-    fn default() -> Self {
-        Self {
-            workspace: Workspace::default(),
-            profile: Profile::default(),
-            chain_info: ChainInfo::default(),
-            tx_configs: TxConfigs::default(),
-        }
-    }
-}
+// impl Default for AppCfg {
+//     fn default() -> Self {
+//         Self {
+//             workspace: Workspace::default(),
+//             profile: Profile::default(),
+//             chain_info: ChainInfo::default(),
+//             tx_configs: TxConfigs::default(),
+//         }
+//     }
+// }
 
-/// Information about the Chain to mined for
-#[derive(Clone, Debug, Deserialize, Serialize)]
-/// #[serde(deny_unknown_fields)]
-pub struct Workspace {
-    /// home directory of the diem node, may be the same as miner.
-    pub node_home: PathBuf,
-    /// Directory of source code (for developer tests only)
-    pub source_path: Option<PathBuf>,
-    /// Directory to store blocks in
-    pub block_dir: String,
-    /// Directory for the database
-    #[serde(default = "default_db_path")]
-    pub db_path: PathBuf,
-    /// Path to which stdlib binaries for upgrades get built typically
-    /// /language/diem-framework/staged/stdlib.mv
-    pub stdlib_bin_path: Option<PathBuf>,
-}
+// / Information about the Chain to mined for
+//#[derive(Clone, Debug, Deserialize, Serialize)]
+// / #[serde(deny_unknown_fields)]
+// pub struct Workspace {
+//     /// home directory of the diem node, may be the same as miner.
+//     pub node_home: PathBuf,
+//     /// Directory of source code (for developer tests only)
+//     pub source_path: Option<PathBuf>,
+//     /// Directory to store blocks in
+//     pub block_dir: String,
+//     /// Directory for the database
+//     #[serde(default = "default_db_path")]
+//     pub db_path: PathBuf,
+//     /// Path to which stdlib binaries for upgrades get built typically
+//     /// /language/diem-framework/staged/stdlib.mv
+//     pub stdlib_bin_path: Option<PathBuf>,
+// }
 
-fn default_db_path() -> PathBuf {
-    dirs::home_dir().unwrap().join(NODE_HOME).join("db")
-}
+// fn default_db_path() -> PathBuf {
+//     dirs::home_dir().unwrap().join(NODE_HOME).join("db")
+// }
 
-impl Default for Workspace {
-    fn default() -> Self {
-        Self {
-            node_home: dirs::home_dir().unwrap().join(NODE_HOME),
-            source_path: None,
-            block_dir: "vdf_proofs".to_owned(),
-            db_path: default_db_path(),
-            stdlib_bin_path: None,
-        }
-    }
-}
+// impl Default for Workspace {
+//     fn default() -> Self {
+//         Self {
+//             node_home: dirs::home_dir().unwrap().join(NODE_HOME),
+//             source_path: None,
+//             block_dir: "vdf_proofs".to_owned(),
+//             db_path: default_db_path(),
+//             stdlib_bin_path: None,
+//         }
+//     }
+// }
 
 /// Information about the Chain to mined for
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -395,30 +394,31 @@ pub struct Profile {
 
     // /// Node URL and and port to submit transactions. Defaults to localhost:8080
     // pub default_node: Option<Url>,
-    /// Other nodes to connect for fallback connections
-    pub upstream_nodes: Vec<Url>,
+
+    // /// Other nodes to connect for fallback connections
+    // pub upstream_nodes: Vec<Url>,
 
     /// Link to another delay tower.
     pub tower_link: Option<String>,
 }
 
-impl Default for Profile {
-    fn default() -> Self {
-        Self {
-            account: AccountAddress::from_hex_literal("0x0").unwrap(),
-            auth_key: AuthenticationKey::from_str(
-                "0000000000000000000000000000000000000000000000000000000000000000",
-            )
-            .unwrap(),
-            statement: "Protests rage across the nation".to_owned(),
-            ip: "0.0.0.0".parse().unwrap(),
-            vfn_ip: "0.0.0.0".parse().ok(),
-            // default_node: Some("http://localhost:8080".parse().expect("parse url")),
-            upstream_nodes: vec!["http://localhost:8080".parse().expect("parse url")],
-            tower_link: None,
-        }
-    }
-}
+// impl Default for Profile {
+//     fn default() -> Self {
+//         Self {
+//             account: AccountAddress::from_hex_literal("0x0").unwrap(),
+//             auth_key: AuthenticationKey::from_str(
+//                 "0000000000000000000000000000000000000000000000000000000000000000",
+//             )
+//             .unwrap(),
+//             statement: "Protests rage across the nation".to_owned(),
+//             ip: "0.0.0.0".parse().unwrap(),
+//             vfn_ip: "0.0.0.0".parse().ok(),
+//             // default_node: Some("http://localhost:8080".parse().expect("parse url")),
+//             upstream_nodes: vec!["http://localhost:8080".parse().expect("parse url")],
+//             tower_link: None,
+//         }
+//     }
+// }
 
 /// Transaction types
 pub enum TxType {
@@ -520,75 +520,76 @@ fn default_cheap_txs_cost() -> Option<TxCost> {
     Some(TxCost::new(1_000))
 }
 
-/// Get swarm configs from swarm files, swarm must be running
-pub fn get_swarm_rpc_url(mut swarm_path: PathBuf) -> (Url, Waypoint) {
-    swarm_path.push("0/node.yaml");
-    let config = NodeConfig::load(&swarm_path)
-        .unwrap_or_else(|_| panic!("Failed to load NodeConfig from file: {:?}", &swarm_path));
+// / Get swarm configs from swarm files, swarm must be running
+// pub fn get_swarm_rpc_url(mut swarm_path: PathBuf) -> (Url, Waypoint) {
+//     swarm_path.push("0/node.yaml");
+//     let config = NodeConfig::load(&swarm_path)
+//         .unwrap_or_else(|_| panic!("Failed to load NodeConfig from file: {:?}", &swarm_path));
 
-    let url = Url::parse(format!("http://localhost:{}", config.json_rpc.address.port()).as_str())
-        .unwrap();
-    let waypoint = config.base.waypoint.waypoint();
+//     let url = Url::parse(format!("http://localhost:{}", config.json_rpc.address.port()).as_str())
+//         .unwrap();
+//     let waypoint = config.base.waypoint.waypoint();
 
-    (url, waypoint)
-}
+//     (url, waypoint)
+// }
 
-/// Get swarm configs from swarm files, swarm must be running
-pub fn get_swarm_backup_service_url(mut swarm_path: PathBuf, swarm_id: u8) -> Result<Url, Error> {
-    swarm_path.push(format!("{}/node.yaml", swarm_id));
-    let config = NodeConfig::load(&swarm_path)
-        .unwrap_or_else(|_| panic!("Failed to load NodeConfig from file: {:?}", &swarm_path));
+// / Get swarm configs from swarm files, swarm must be running
+// pub fn get_swarm_backup_service_url(mut swarm_path: PathBuf, swarm_id: u8) -> Result<Url, Error> {
+//     swarm_path.push(format!("{}/node.yaml", swarm_id));
+//     let config = NodeConfig::load(&swarm_path)
+//         .unwrap_or_else(|_| panic!("Failed to load NodeConfig from file: {:?}", &swarm_path));
 
-    let url =
-        Url::parse(format!("http://localhost:{}", config.storage.address.port()).as_str()).unwrap();
+//     let url =
+//         Url::parse(format!("http://localhost:{}", config.storage.address.port()).as_str()).unwrap();
 
-    Ok(url)
-}
+//     Ok(url)
+// }
 
 #[derive(Serialize, Deserialize, Debug)]
 struct EpochJSON {
     epoch: u64,
     waypoint: Waypoint,
 }
-/// fetch initial waypoint information from a clean state.
-pub fn bootstrap_waypoint_from_upstream(url: &mut Url) -> Result<(u64, Waypoint), Error> {
-    url.set_port(Some(3030)).unwrap();
-    let epoch_url = url.join("epoch.json").unwrap();
-    let g_res = reqwest::blocking::get(&epoch_url.to_string())?;
-    if g_res.status().is_success() {
-        let txt = g_res.text()?;
-        let epoch: EpochJSON = serde_json::from_str(&txt)?;
-        return Ok((epoch.epoch, epoch.waypoint));
-    }
-    bail!(
-        "fetching remote JSON-rpc failed with status: {:?}, response: {:?}",
-        g_res.status(),
-        g_res.text()
-    );
-}
+// /// fetch initial waypoint information from a clean state.
+// pub fn bootstrap_waypoint_from_upstream(url: &mut Url) -> Result<(u64, Waypoint), Error> {
+//     url.set_port(Some(3030)).unwrap();
+//     let epoch_url = url.join("epoch.json").unwrap();
+//     let g_res = reqwest::blocking::get(&epoch_url.to_string())?;
+//     if g_res.status().is_success() {
+//         let txt = g_res.text()?;
+//         let epoch: EpochJSON = serde_json::from_str(&txt)?;
+//         return Ok((epoch.epoch, epoch.waypoint));
+//     }
+//     bail!(
+//         "fetching remote JSON-rpc failed with status: {:?}, response: {:?}",
+//         g_res.status(),
+//         g_res.text()
+//     );
+// }
 
 #[derive(Serialize, Deserialize, Debug)]
 struct WaypointRpc {
     result: Option<serde_json::Value>,
 }
-/// get the waypoint from a fullnode
-pub fn bootstrap_waypoint_from_rpc(url: Url) -> Result<Waypoint, Error> {
-    let method = "get_waypoint_view";
-    let params = json!([]);
-    let request = json!({"jsonrpc": "2.0", "method": method, "params": params, "id": 1});
-    let client = Client::new();
-    let resp = client.post(url.as_str()).json(&request).send()?;
+// /// get the waypoint from a fullnode
+// pub fn bootstrap_waypoint_from_rpc(url: Url) -> Result<Waypoint, Error> {
+//     let method = "get_waypoint_view";
+//     let params = json!([]);
+//     let request = json!({"jsonrpc": "2.0", "method": method, "params": params, "id": 1});
+//     let client = Client::new();
+//     let resp = client.post(url.as_str()).json(&request).send()?;
 
-    // let json: WaypointRpc = serde_json::from_value(resp.json().unwrap()).unwrap();
-    let parsed: serde_json::Value = resp.json()?;
-    match &parsed["result"] {
-        serde_json::Value::Object(r) => {
-            if let serde_json::Value::String(waypoint) = &r["waypoint"] {
-                let w: Waypoint = waypoint.parse()?;
-                return Ok(w);
-            }
-        }
-        _ => {}
-    }
-    bail!("could not get waypoint from json-rpc, url: {:?} ", url)
-}
+//     // let json: WaypointRpc = serde_json::from_value(resp.json().unwrap()).unwrap();
+//     let parsed: serde_json::Value = resp.json()?;
+//     match &parsed["result"] {
+//         serde_json::Value::Object(r) => {
+//             if let serde_json::Value::String(waypoint) = &r["waypoint"] {
+//                 let w: Waypoint = waypoint.parse()?;
+//                 return Ok(w);
+//             }
+//         }
+//         _ => {}
+//     }
+//     bail!("could not get waypoint from json-rpc, url: {:?} ", url)
+// }
+
