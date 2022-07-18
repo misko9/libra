@@ -487,7 +487,7 @@ impl TxCost {
         TxCost {
             max_gas_unit_for_tx: cost, // oracle upgrade transaction is expensive.
             coin_price_per_unit: 1,
-            user_tx_timeout: 5_000,
+            user_tx_timeout: 1_500,
         }
     }
 }
@@ -516,7 +516,7 @@ fn default_miner_txs_cost() -> Option<TxCost> {
     Some(TxCost::new(10_000))
 }
 fn default_cheap_txs_cost() -> Option<TxCost> {
-    Some(TxCost::new(1_000))
+    Some(TxCost::new(10_000))
 }
 
 // / Get swarm configs from swarm files, swarm must be running
