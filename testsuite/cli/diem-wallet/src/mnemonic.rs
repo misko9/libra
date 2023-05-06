@@ -12,9 +12,9 @@ use anyhow::Result;
 //use diem_temppath::TempPath;
 use mirai_annotations::*;
 //#[cfg(test)]
-use rand::rngs::OsRng;
-#[cfg(test)]
-use rand::RngCore;
+//use rand::rngs::OsRng;
+//#[cfg(test)]
+//use rand::RngCore;
 use sha2::{Digest, Sha256};
 
 // use std::{

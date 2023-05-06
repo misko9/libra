@@ -8,7 +8,7 @@ use diem_crypto::{
     test_utils::TEST_SEED,
     PrivateKey, SigningKey, Uniform,
 };
-use rand::{rngs::StdRng, SeedableRng};
+//use rand::{rngs::StdRng, SeedableRng};
 use serde::ser::Serialize;
 use std::convert::TryFrom;
 
@@ -53,7 +53,7 @@ impl ValidatorSigner {
 }
 
 impl ValidatorSigner {
-    /// Generate a random set of public and private keys and author
+    /*/// Generate a random set of public and private keys and author
     /// information.
     /// This takes an optional seed, which it initializes to
     /// `test_utils::TEST_SEED` if passed `None`
@@ -63,7 +63,7 @@ impl ValidatorSigner {
             AccountAddress::random(),
             Ed25519PrivateKey::generate(&mut rng),
         )
-    }
+    }*/
 
     /// For test only - makes signer with nicely looking account address that has specified integer
     /// as fist byte, and rest are zeroes
@@ -75,7 +75,7 @@ impl ValidatorSigner {
     }
 }
 
-#[cfg(any(test, feature = "fuzzing"))]
+/*#[cfg(any(test, feature = "fuzzing"))]
 pub mod proptests {
     use super::*;
     use diem_crypto::Genesis;
@@ -136,4 +136,4 @@ pub mod proptests {
         }
 
     }
-}
+}*/

@@ -5,8 +5,8 @@ use crate::account_address::AccountAddress;
 use hex::FromHex;
 #[cfg(any(test, feature = "fuzzing"))]
 use proptest_derive::Arbitrary;
-#[cfg(any(test, feature = "fuzzing"))]
-use rand::{rngs::OsRng, RngCore};
+//#[cfg(any(test, feature = "fuzzing"))]
+//use rand::{rngs::OsRng, RngCore};
 use serde::{de, ser, Deserialize, Serialize};
 use std::{
     convert::{TryFrom, TryInto},
@@ -50,13 +50,13 @@ impl EventKey {
         u64::from_le_bytes(self.0[0..8].try_into().unwrap())
     }
 
-    #[cfg(any(test, feature = "fuzzing"))]
+    /*#[cfg(any(test, feature = "fuzzing"))]
     /// Create a random event key for testing
     pub fn random() -> Self {
         let mut rng = OsRng;
         let salt = rng.next_u64();
         EventKey::new_from_address(&AccountAddress::random(), salt)
-    }
+    }*/
 
     /// Create a unique handle by using an AccountAddress and a counter.
     pub fn new_from_address(addr: &AccountAddress, salt: u64) -> Self {
@@ -188,14 +188,14 @@ impl EventHandle {
         &mut self.count
     }
 
-    #[cfg(any(test, feature = "fuzzing"))]
+    /*#[cfg(any(test, feature = "fuzzing"))]
     /// Create a random event handle for testing
     pub fn random_handle(count: u64) -> Self {
         Self {
             key: EventKey::random(),
             count,
         }
-    }
+    }*/
 
     #[cfg(any(test, feature = "fuzzing"))]
     /// Derive a unique handle by using an AccountAddress and a counter.
@@ -249,13 +249,13 @@ mod tests {
         EventKey::from_bytes(bytes).unwrap_err();
     }
 
-    #[test]
+    /*#[test]
     fn test_deserialize_from_json_value() {
         let key = EventKey::random();
         let json_value = serde_json::to_value(key).unwrap();
         let key2: EventKey = serde_json::from_value(json_value).unwrap();
         assert_eq!(key, key2);
-    }
+    }*/
 
     #[test]
     fn test_serde_json() {

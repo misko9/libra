@@ -4,7 +4,8 @@ use diem_wallet::{Mnemonic, WalletLibrary};
 use once_cell::sync::Lazy;
 //use std::{env, process::exit};
 
-/// Genereates keys from WalletLibrary, updates a MinerConfig
+// Removing keygen so that WalletLibrary::new() is not called, random not supported by wasm
+/*/// Genereates keys from WalletLibrary, updates a MinerConfig
 pub fn keygen() -> (AuthenticationKey, AccountAddress, WalletLibrary, String) {
     // Generate new keys
     let mut wallet = WalletLibrary::new();
@@ -43,7 +44,7 @@ pub fn keygen() -> (AuthenticationKey, AccountAddress, WalletLibrary, String) {
     );
 
     (auth_key, account, wallet, mnemonic_string)
-}
+}*/
 
 /// Get authkey and account from mnemonic
 pub fn get_account_from_mnem(
