@@ -130,7 +130,7 @@ pub trait SigningKey:
     fn sign<T: CryptoHash + Serialize>(&self, message: &T) -> Self::SignatureMaterial;
 
     /// Signs a non-hash input message. For testing only.
-    #[cfg(any(test, feature = "fuzzing"))]
+//    #[cfg(any(test, feature = "fuzzing"))]
     fn sign_arbitrary_message(&self, message: &[u8]) -> Self::SignatureMaterial;
 
     /// Returns the associated verifying key

@@ -160,7 +160,7 @@ impl SigningKey for MultiEd25519PrivateKey {
         MultiEd25519Signature { signatures, bitmap }
     }
 
-    #[cfg(any(test, feature = "fuzzing"))]
+//    #[cfg(any(test, feature = "fuzzing"))]
     fn sign_arbitrary_message(&self, message: &[u8]) -> MultiEd25519Signature {
         let mut signatures: Vec<Ed25519Signature> = Vec::with_capacity(self.threshold as usize);
         let mut bitmap = [0u8; BITMAP_NUM_OF_BYTES];

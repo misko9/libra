@@ -76,7 +76,7 @@ where
     }
 }
 
-#[cfg(any(test, feature = "fuzzing"))]
+/*#[cfg(any(test, feature = "fuzzing"))]
 use proptest::prelude::*;
 #[cfg(any(test, feature = "fuzzing"))]
 use rand::{rngs::StdRng, SeedableRng};
@@ -207,4 +207,4 @@ impl crate::hash::CryptoHash for TestDiemCrypto {
 #[cfg(any(test, feature = "fuzzing"))]
 pub fn random_serializable_struct() -> impl Strategy<Value = TestDiemCrypto> {
     (String::arbitrary()).prop_map(TestDiemCrypto).no_shrink()
-}
+}*/

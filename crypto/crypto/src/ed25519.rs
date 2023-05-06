@@ -189,7 +189,7 @@ impl Ed25519Signature {
     }
 
     /// return an all-zero signature (for test only)
-    #[cfg(any(test, feature = "fuzzing"))]
+//    #[cfg(any(test, feature = "fuzzing"))]
     pub fn dummy_signature() -> Self {
         Self::from_bytes_unchecked(&[0u8; Self::LENGTH]).unwrap()
     }
@@ -242,7 +242,7 @@ impl SigningKey for Ed25519PrivateKey {
         Ed25519PrivateKey::sign_arbitrary_message(&self, bytes.as_ref())
     }
 
-    #[cfg(any(test, feature = "fuzzing"))]
+//    #[cfg(any(test, feature = "fuzzing"))]
     fn sign_arbitrary_message(&self, message: &[u8]) -> Ed25519Signature {
         Ed25519PrivateKey::sign_arbitrary_message(self, message)
     }
@@ -536,7 +536,7 @@ fn check_s_lt_l(s: &[u8]) -> bool {
     false
 }
 
-#[cfg(any(test, feature = "fuzzing"))]
+/*#[cfg(any(test, feature = "fuzzing"))]
 use crate::test_utils::{self, KeyPair};
 
 /// Produces a uniformly random ed25519 keypair from a seed
@@ -558,4 +558,4 @@ impl proptest::arbitrary::Arbitrary for Ed25519PublicKey {
             .prop_map(|v| v.public_key)
             .boxed()
     }
-}
+}*/

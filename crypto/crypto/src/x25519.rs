@@ -38,8 +38,8 @@ use diem_crypto_derive::{DeserializeKey, SerializeKey, SilentDebug, SilentDispla
 use rand::{CryptoRng, RngCore};
 use std::convert::{TryFrom, TryInto};
 
-#[cfg(any(test, feature = "fuzzing"))]
-use proptest_derive::Arbitrary;
+//#[cfg(any(test, feature = "fuzzing"))]
+//use proptest_derive::Arbitrary;
 
 //
 // Underlying Implementation
@@ -67,14 +67,14 @@ pub const SHARED_SECRET_SIZE: usize = 32;
 
 /// This type should be used to deserialize a received private key
 #[derive(DeserializeKey, SilentDisplay, SilentDebug, SerializeKey)]
-#[cfg_attr(any(test, feature = "fuzzing"), derive(Clone))]
+//#[cfg_attr(any(test, feature = "fuzzing"), derive(Clone))]
 pub struct PrivateKey(x25519_dalek::StaticSecret);
 
 /// This type should be used to deserialize a received public key
 #[derive(
     Default, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, SerializeKey, DeserializeKey,
 )]
-#[cfg_attr(any(test, feature = "fuzzing"), derive(Arbitrary))]
+//#[cfg_attr(any(test, feature = "fuzzing"), derive(Arbitrary))]
 pub struct PublicKey([u8; PUBLIC_KEY_SIZE]);
 
 //
@@ -192,14 +192,14 @@ impl traits::ValidCryptoMaterial for PrivateKey {
     }
 }
 
-#[cfg(any(test, feature = "fuzzing"))]
+//#[cfg(any(test, feature = "fuzzing"))]
 impl PartialEq for PrivateKey {
     fn eq(&self, other: &Self) -> bool {
         self.to_bytes() == other.to_bytes()
     }
 }
 
-#[cfg(any(test, feature = "fuzzing"))]
+/*#[cfg(any(test, feature = "fuzzing"))]
 impl proptest::arbitrary::Arbitrary for PrivateKey {
     type Parameters = ();
     type Strategy = proptest::strategy::BoxedStrategy<Self>;
@@ -210,7 +210,7 @@ impl proptest::arbitrary::Arbitrary for PrivateKey {
             .prop_map(PrivateKey::from)
             .boxed()
     }
-}
+}*/
 
 // public key part
 
@@ -259,7 +259,7 @@ impl std::fmt::Debug for PublicKey {
     }
 }
 
-#[cfg(any(test, feature = "fuzzing"))]
+/*#[cfg(any(test, feature = "fuzzing"))]
 use crate::test_utils::{self, KeyPair};
 #[cfg(any(test, feature = "fuzzing"))]
 use proptest::prelude::*;
@@ -268,4 +268,4 @@ use proptest::prelude::*;
 #[cfg(any(test, feature = "fuzzing"))]
 pub fn keypair_strategy() -> impl Strategy<Value = KeyPair<PrivateKey, PublicKey>> {
     test_utils::uniform_keypair_strategy::<PrivateKey, PublicKey>()
-}
+}*/
