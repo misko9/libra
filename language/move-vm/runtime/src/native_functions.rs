@@ -8,8 +8,18 @@ use move_core_types::{
     value::MoveTypeLayout, vm_status::StatusType,
 };
 use move_vm_natives::{
-    account, bcs, debug, event, hash, ol_decimal, ol_eth_signature, ol_hash, signature, signer,
-    vdf, vector,
+    account, 
+    bcs, 
+    debug, 
+    event, 
+    hash, 
+    //ol_decimal, 
+    //ol_eth_signature, 
+    //ol_hash, 
+    signature, 
+    signer,
+    //vdf, 
+    vector,
 }; //////// 0L ////////
 use move_vm_types::{
     data_store::DataStore,
@@ -49,14 +59,14 @@ pub(crate) enum NativeFunction {
     // functions below this line are deprecated and remain only for replaying old transactions
     DestroySigner,
     //////// 0L ////////
-    VDFVerify,
-    RedeemAuthKeyParse,
-    DecimalDemo,
-    DecimalSingle,
-    DecimalPair,
-    HashKeccak256,
-    EthSignatureRecover,
-    EthSignatureVerify,
+    //VDFVerify,
+    //RedeemAuthKeyParse,
+    //DecimalDemo,
+    //DecimalSingle,
+    //DecimalPair,
+    //HashKeccak256,
+    //EthSignatureRecover,
+    //EthSignatureVerify,
 }
 
 impl NativeFunction {
@@ -90,14 +100,14 @@ impl NativeFunction {
             // functions below this line are deprecated and remain only for replaying old transactions
             (&CORE_CODE_ADDRESS, "DiemAccount", "destroy_signer") => DestroySigner,
             //////// 0L ////////
-            (&CORE_CODE_ADDRESS, "VDF", "verify") => VDFVerify,
-            (&CORE_CODE_ADDRESS, "VDF", "extract_address_from_challenge") => RedeemAuthKeyParse,
-            (&CORE_CODE_ADDRESS, "Decimal", "decimal_demo") => DecimalDemo,
-            (&CORE_CODE_ADDRESS, "Decimal", "single_op") => DecimalSingle,
-            (&CORE_CODE_ADDRESS, "Decimal", "pair_op") => DecimalPair,
-            (&CORE_CODE_ADDRESS, "XHash", "keccak_256") => HashKeccak256,
-            (&CORE_CODE_ADDRESS, "EthSignature", "recover") => EthSignatureRecover,
-            (&CORE_CODE_ADDRESS, "EthSignature", "verify") => EthSignatureVerify,
+            //(&CORE_CODE_ADDRESS, "VDF", "verify") => VDFVerify,
+            //(&CORE_CODE_ADDRESS, "VDF", "extract_address_from_challenge") => RedeemAuthKeyParse,
+            //(&CORE_CODE_ADDRESS, "Decimal", "decimal_demo") => DecimalDemo,
+            //(&CORE_CODE_ADDRESS, "Decimal", "single_op") => DecimalSingle,
+            //(&CORE_CODE_ADDRESS, "Decimal", "pair_op") => DecimalPair,
+            //(&CORE_CODE_ADDRESS, "XHash", "keccak_256") => HashKeccak256,
+            //(&CORE_CODE_ADDRESS, "EthSignature", "recover") => EthSignatureRecover,
+            //(&CORE_CODE_ADDRESS, "EthSignature", "verify") => EthSignatureVerify,
 
             _ => return None,
         })
@@ -133,14 +143,14 @@ impl NativeFunction {
             // functions below this line are deprecated and remain only for replaying old transactions
             Self::DestroySigner => account::native_destroy_signer(ctx, t, v),
             //////// 0L ////////
-            Self::VDFVerify => vdf::verify(ctx, t, v),
-            Self::RedeemAuthKeyParse => vdf::extract_address_from_challenge(ctx, t, v),
-            Self::DecimalDemo => ol_decimal::native_decimal_demo(ctx, t, v),
-            Self::DecimalSingle => ol_decimal::native_decimal_single(ctx, t, v),
-            Self::DecimalPair => ol_decimal::native_decimal_pair(ctx, t, v),
-            Self::HashKeccak256 => ol_hash::native_keccak_256(ctx, t, v),
-            Self::EthSignatureRecover => ol_eth_signature::native_eth_signature_recover(ctx, t, v),
-            Self::EthSignatureVerify => ol_eth_signature::native_eth_signature_verify(ctx, t, v),
+            //Self::VDFVerify => vdf::verify(ctx, t, v),
+            //Self::RedeemAuthKeyParse => vdf::extract_address_from_challenge(ctx, t, v),
+            //Self::DecimalDemo => ol_decimal::native_decimal_demo(ctx, t, v),
+            //Self::DecimalSingle => ol_decimal::native_decimal_single(ctx, t, v),
+            //Self::DecimalPair => ol_decimal::native_decimal_pair(ctx, t, v),
+            //Self::HashKeccak256 => ol_hash::native_keccak_256(ctx, t, v),
+            //Self::EthSignatureRecover => ol_eth_signature::native_eth_signature_recover(ctx, t, v),
+            //Self::EthSignatureVerify => ol_eth_signature::native_eth_signature_verify(ctx, t, v),
         };
         debug_assert!(match &result {
             Err(e) => e.major_status().status_type() == StatusType::InvariantViolation,

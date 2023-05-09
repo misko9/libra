@@ -8,7 +8,7 @@ use crate::{
     logging::LogContext,
     session::Session,
 };
-use diem_logger::prelude::*;
+//use diem_logger::prelude::*;
 use move_binary_format::{
     access::ModuleAccess,
     compatibility::Compatibility,
@@ -68,7 +68,7 @@ impl VMRuntime {
         let compiled_module = match CompiledModule::deserialize(&module) {
             Ok(module) => module,
             Err(err) => {
-                warn!(*log_context, "[VM] module deserialization failed {:?}", err);
+                //warn!(*log_context, "[VM] module deserialization failed {:?}", err);
                 return Err(err.finish(Location::Undefined));
             }
         };
@@ -131,7 +131,7 @@ impl VMRuntime {
         let compiled_module = match CompiledModule::deserialize(&module) {
             Ok(module) => module,
             Err(err) => {
-                warn!(*log_context, "[VM] module deserialization failed {:?}", err);
+                //warn!(*log_context, "[VM] module deserialization failed {:?}", err);
                 return Err(err.finish(Location::Undefined));
             }
         };
@@ -181,7 +181,7 @@ impl VMRuntime {
                 match MoveValue::simple_deserialize(&arg, &MoveTypeLayout::Signer) {
                     Ok(MoveValue::Signer(addr)) => Value::signer_reference(addr),
                     Ok(_) | Err(_) => {
-                        warn!("[VM] failed to deserialize argument");
+                        //warn!("[VM] failed to deserialize argument");
                         return Err(PartialVMError::new(
                             StatusCode::FAILED_TO_DESERIALIZE_ARGUMENT,
                         ));
@@ -191,7 +191,7 @@ impl VMRuntime {
                 let layout = match self.loader.type_to_type_layout(ty) {
                     Ok(layout) => layout,
                     Err(_err) => {
-                        warn!("[VM] failed to get layout from type");
+                        //warn!("[VM] failed to get layout from type");
                         return Err(PartialVMError::new(
                             StatusCode::INVALID_PARAM_TYPE_FOR_DESERIALIZATION,
                         ));
@@ -201,7 +201,7 @@ impl VMRuntime {
                 match Value::simple_deserialize(&arg, &layout) {
                     Some(val) => val,
                     None => {
-                        warn!("[VM] failed to deserialize argument");
+                        //warn!("[VM] failed to deserialize argument");
                         return Err(PartialVMError::new(
                             StatusCode::FAILED_TO_DESERIALIZE_ARGUMENT,
                         ));

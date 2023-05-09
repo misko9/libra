@@ -8,7 +8,7 @@ use move_binary_format::file_format::CompiledModule;
 use once_cell::sync::Lazy;
 use std::{convert::TryFrom, path::PathBuf};
 
-use bytecode_verifier::verify_module; //////// 0L ////////
+//use bytecode_verifier::verify_module; //////// 0L ////////
 
 pub mod legacy;
 
@@ -133,7 +133,7 @@ pub fn name_for_script(bytes: &[u8]) -> Result<String> {
 
 //////// 0L ////////
 // Update stdlib with a byte string, used as part of the upgrade oracle
-pub fn import_stdlib(lib_bytes: &Vec<u8>) -> Result<Vec<CompiledModule>> {
+/*pub fn import_stdlib(lib_bytes: &Vec<u8>) -> Result<Vec<CompiledModule>> {
     let modules : Vec<CompiledModule> = bcs::from_bytes::<Vec<Vec<u8>>>(lib_bytes)? // set as empty array if err occurred
         .into_iter()
         .filter_map(|bytes| CompiledModule::deserialize(&bytes).ok())
@@ -151,7 +151,7 @@ pub fn import_stdlib(lib_bytes: &Vec<u8>) -> Result<Vec<CompiledModule>> {
         verified_modules.push(module)
     }
     Ok(verified_modules)
-}
+}*/
 
 
 // //////// 0L ////////

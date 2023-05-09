@@ -1,9 +1,9 @@
 // Copyright (c) The Libra Core Contributors
 // SPDX-License-Identifier: Apache-2.0
-use crate::counters::{
-    MOVE_VM_NATIVE_VERIFY_VDF_LATENCY, MOVE_VM_NATIVE_VERIFY_VDF_PROOF_COUNT,
-    MOVE_VM_NATIVE_VERIFY_VDF_PROOF_ERROR_COUNT,
-};
+//use crate::counters::{
+//    MOVE_VM_NATIVE_VERIFY_VDF_LATENCY, MOVE_VM_NATIVE_VERIFY_VDF_PROOF_COUNT,
+//    MOVE_VM_NATIVE_VERIFY_VDF_PROOF_ERROR_COUNT,
+//};
 use diem_types::{transaction::authenticator::AuthenticationKey, vm_status::StatusCode};
 use move_binary_format::errors::{PartialVMError, PartialVMResult};
 use move_vm_types::{
@@ -25,18 +25,18 @@ pub fn verify(
 ) -> PartialVMResult<NativeResult> {
     // temporary logging.
     // let start_time = Instant::now();
-    let metric_timer = MOVE_VM_NATIVE_VERIFY_VDF_LATENCY.start_timer();
+    //let metric_timer = MOVE_VM_NATIVE_VERIFY_VDF_LATENCY.start_timer();
 
     if arguments.len() != 4 {
         let msg = format!(
             "wrong number of arguments for vdf_verify expected 4 found {}",
             arguments.len()
         );
-        MOVE_VM_NATIVE_VERIFY_VDF_PROOF_ERROR_COUNT.inc();
+        //MOVE_VM_NATIVE_VERIFY_VDF_PROOF_ERROR_COUNT.inc();
         return Err(PartialVMError::new(StatusCode::UNREACHABLE).with_message(msg));
     }
 
-    MOVE_VM_NATIVE_VERIFY_VDF_PROOF_COUNT.inc();
+    //MOVE_VM_NATIVE_VERIFY_VDF_PROOF_COUNT.inc();
 
     // pop the arguments (reverse order).
     let security = pop_arg!(arguments, Reference)
@@ -57,7 +57,7 @@ pub fn verify(
 
     // refuse to try anthing with a security parameter above 2048 for DOS risk.
     if security > 2048 {
-        MOVE_VM_NATIVE_VERIFY_VDF_PROOF_ERROR_COUNT.inc();
+        //MOVE_VM_NATIVE_VERIFY_VDF_PROOF_ERROR_COUNT.inc();
         return Err(PartialVMError::new(StatusCode::UNREACHABLE)
             .with_message("VDF security parameter above threshold".to_string()));
     }
@@ -72,7 +72,7 @@ pub fn verify(
 
     // temporary logging
     // let latency = start_time.elapsed();
-    metric_timer.observe_duration();
+    //metric_timer.observe_duration();
     // dbg!("vdf verification latency", &latency);
 
     Ok(NativeResult::ok(cost, return_values))

@@ -19,7 +19,7 @@ parking_lot = "0.11.1"
 
 bytecode-verifier = { path = "../../bytecode-verifier" }
 diem-crypto = { path = "../../../crypto/crypto" }
-diem-logger = { path = "../../../common/logger" }
+#diem-logger = { path = "../../../common/logger" }
 diem-workspace-hack = { path = "../../../common/workspace-hack" }
 move-core-types = { path = "../../move-core/types" }
 move-vm-natives = { path = "../natives" }

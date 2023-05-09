@@ -7,7 +7,7 @@ use crate::{
     native_functions::FunctionContext,
     trace,
 };
-use diem_logger::prelude::*;
+//use diem_logger::prelude::*;
 use fail::fail_point;
 use move_binary_format::{
     errors::*,
@@ -328,10 +328,10 @@ impl<L: LogContext> Interpreter<L> {
             Ok(gv) => Ok(gv),
             Err(e) => {
                 log_context.alert();
-                error!(
-                    *log_context,
-                    "[VM] error loading resource at ({}, {:?}): {:?} from data store", addr, ty, e
-                );
+                //error!(
+                //    *log_context,
+                //    "[VM] error loading resource at ({}, {:?}): {:?} from data store", addr, ty, e
+                //);
                 Err(e)
             }
         }
@@ -399,10 +399,10 @@ impl<L: LogContext> Interpreter<L> {
         // a verification error cannot happen at runtime so change it into an invariant violation.
         if err.status_type() == StatusType::Verification {
             self.log_context.alert();
-            error!(
-                self.log_context,
-                "Verification error during runtime: {:?}", err
-            );
+            //error!(
+            //    self.log_context,
+            //    "Verification error during runtime: {:?}", err
+            //);
             let new_err = PartialVMError::new(StatusCode::VERIFICATION_ERROR);
             let new_err = match err.message() {
                 None => new_err,
@@ -413,10 +413,10 @@ impl<L: LogContext> Interpreter<L> {
         if err.status_type() == StatusType::InvariantViolation {
             let state = self.get_internal_state(current_frame);
             self.log_context.alert();
-            error!(
-                self.log_context,
-                "Error: {:?}\nCORE DUMP: >>>>>>>>>>>>\n{}\n<<<<<<<<<<<<\n", err, state,
-            );
+            //error!(
+            //    self.log_context,
+            //    "Error: {:?}\nCORE DUMP: >>>>>>>>>>>>\n{}\n<<<<<<<<<<<<\n", err, state,
+            //);
         }
         err
     }
@@ -696,14 +696,14 @@ impl Frame {
         let code = self.function.code();
         loop {
             for instruction in &code[self.pc as usize..] {
-                trace!(
+                /*trace!(
                     &self.function,
                     &self.locals,
                     self.pc,
                     instruction,
                     &resolver,
                     &interpreter
-                );
+                );*/
 
                 fail_point!("move_vm::interpreter_loop", |_| {
                     Err(
