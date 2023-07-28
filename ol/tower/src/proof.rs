@@ -111,7 +111,7 @@ pub fn mine_and_submit(
             println!("Mining VDF Proof # {}", mining_height);
             println!("Just sleeping for 1 min");
 
-            thread::sleep(time::Duration::from_millis(1000));
+            thread::sleep(std::time::Duration::from_millis(60_000));
             //let block = mine_once(&config)?;
             println!(
                 "Trying to submit backlog",
