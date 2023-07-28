@@ -12,6 +12,7 @@ use std::{
     io::{BufReader, Write},
     path::PathBuf,
     time::Instant,
+    thread,
 };
 use txs::submit_tx::TxParams;
 
@@ -108,12 +109,17 @@ pub fn mine_and_submit(
         // mine continuously from the last block in the file systems
         loop {
             println!("Mining VDF Proof # {}", mining_height);
+            println!("Just sleeping for 1 min");
 
-            let block = mine_once(&config)?;
+            thread::sleep(time::Duration::from_millis(1000));
+            //let block = mine_once(&config)?;
             println!(
-                "Proof mined: proof_{}.json created.",
-                block.height.to_string()
+                "Trying to submit backlog",
             );
+            //println!(
+            //    "Proof mined: proof_{}.json created.",
+            //    block.height.to_string()
+            //);
 
             // submits backlog to client
             match backlog::process_backlog(&config, &tx_params, is_operator, delay_backlog) {
@@ -124,7 +130,7 @@ pub fn mine_and_submit(
                 }
             }
 
-            mining_height = block.height + 1;
+            //mining_height = block.height + 1;
         }
     }
 }
